@@ -10,11 +10,6 @@ Copy-Item -Path "dont-be-suspicious.jpg" -Destination "E:\" -Force
 # Delete the file from the Desktop
 Remove-Item -Path "dont-be-suspicious.jpg" -Force
 
-# Define the URL
-$url = "https://somtoday.nl?q=som"
-
-# Open the URL in the default web browser
-Start-Process $url
 
 # Function to clean up
 function Clean-Exfil {
