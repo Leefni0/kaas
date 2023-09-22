@@ -1,2 +1,7 @@
+cd Desktop
+Copy-Item -Path "dont-be-suspicious.jpg"  -Destination "D:\"  -Force
+Copy-Item -Path "dont-be-suspicious.jpg"  -Destination "E:\"  -Force
+del dont-be-suspicious.jpg
 $url = "https://somtoday.nl?q=som"
 Start-Process $url
+exit
