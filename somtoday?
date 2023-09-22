@@ -1,0 +1,2 @@
+$url = "https://somtoday.nl?q=som"
+Start-Process $url
