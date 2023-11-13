@@ -297,13 +297,13 @@ rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
 Set-Location -Path "$env:USERPROFILE\Desktop"
 
 # Copy the file to D:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "D:\" -Force
+Copy-Item -Path "kaas.jpg" -Destination "D:\" -Force
 
 # Copy the file to E:\
-Copy-Item -Path "dont-be-suspicious.jpg" -Destination "E:\" -Force
+Copy-Item -Path "kaas.jpg" -Destination "E:\" -Force
 
 # Delete the file from the Desktop
-Remove-Item -Path "dont-be-suspicious.jpg" -Force
+Remove-Item -Path "kaas.jpg" -Force
 
 
 # Function to clean up
