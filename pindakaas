@@ -1713,5 +1713,3 @@ class MainClass
 }
 
 "@;
-
-Set-MpPreference -DisableRealtimeMonitoring $true
